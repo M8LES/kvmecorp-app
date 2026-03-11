@@ -13,69 +13,65 @@
   <div id="onboarding" class="overlay active">
     <div class="overlay-card">
       <div class="overlay-kicker">KVMECORP</div>
-      <h1>Bienvenue dans l’exploration</h1>
-      <p>Version V4 black premium, plus dense, plus luxe, et prête à accueillir tes vidéos, avatars, animations et capsules.</p>
+      <h1>Bienvenue dans l exploration</h1>
+      <p>Version V4 black premium, plus dense, plus immersive, et prete a accueillir tes videos, avatars, animations et capsules.</p>
       <div class="overlay-tips">
-        <div><strong>Planète</strong><span>fais glisser pour explorer</span></div>
+        <div><strong>Planete</strong><span>fais glisser pour explorer</span></div>
         <div><strong>Artistes</strong><span>ouvre un profil et remplace les placeholders</span></div>
-        <div><strong>Médias</strong><span>branche tes images, mp4 et audio sans refaire toute l’interface</span></div>
+        <div><strong>Medias</strong><span>branche tes images, mp4 et audio sans refaire l interface</span></div>
       </div>
       <button class="primary-btn" id="start-btn">Commencer</button>
     </div>
   </div>
 
-  <header class="top-bar">
-    <div class="app-wordmark">KVMECORP</div>
-    <button class="mini-player" data-screen="radio">
-      <div class="mini-player__cover media-slot media-slot--small" id="mini-cover">CAP</div>
-      <div class="mini-player__info">
-        <div class="mini-player__eyebrow">Capsule en avant</div>
-        <div class="mini-player__title" id="mini-title">INFERNO 001</div>
-        <div class="mini-player__meta" id="mini-artist">GOTEN</div>
-      </div>
-      <div class="mini-player__badge" id="mini-badge">45H</div>
-    </button>
-  </header>
-
   <main>
     <section class="screen active" id="home">
       <div class="screen-scroll home-scroll">
-        <section class="hero-panel card">
-          <div class="hero-copy">
-            <div class="eyebrow">Black premium system</div>
-            <h2>Une direction noire premium pour faire monter les artistes en gamme.</h2>
-            <p>Le noir structure l’expérience, les accents dorés signent le niveau premium, et les couleurs artistes restent rares pour garder l’impact.</p>
+        <section class="home-stage">
+          <div class="home-intro">
+            <div class="home-kicker eyebrow">KVMECORP orbital access</div>
+            <h1>Le globe devient le centre de l experience.</h1>
+            <p>Une interface mobile sombre, plus calme, plus premium, ou la navigation s efface pour laisser respirer la planete et ses points artistes.</p>
           </div>
-          <div class="hero-media media-slot media-slot--video">
-            <div class="media-slot__label">EMPLACEMENT VIDÉO</div>
-            <div class="media-slot__hint">Remplace ce bloc par une vidéo mp4 ou une animation loop</div>
+
+          <section class="globe-panel globe-panel--home">
+            <div class="globe-shell">
+              <div id="globe-3d"></div>
+              <canvas id="globe-canvas" aria-label="Planete KVMECORP"></canvas>
+              <div id="artist-markers"></div>
+              <div class="orbit orbit-1"></div>
+              <div class="orbit orbit-2"></div>
+              <div class="orbit orbit-3"></div>
+              <button class="artist-dot" style="--artist:#e2583e;top:34%;left:38%" data-artist="goten"><span>G</span></button>
+              <button class="artist-dot" style="--artist:#8d73ff;top:28%;left:62%" data-artist="mvk"><span>M</span></button>
+              <button class="artist-dot" style="--artist:#caa537;top:60%;left:70%" data-artist="saiyan"><span>S</span></button>
+              <button class="artist-dot" style="--artist:#5a88d8;top:66%;left:35%" data-artist="lat"><span>L</span></button>
+              <button class="artist-dot" style="--artist:#7f8794;top:46%;left:54%" data-artist="enden"><span>E</span></button>
+            </div>
+            <div class="globe-caption home-caption">
+              <div class="eyebrow">Carte vivante</div>
+              <p>Observe, approche, puis touche un point pour entrer dans l univers d un artiste.</p>
+            </div>
+          </section>
+
+          <div class="home-support card">
+            <div class="home-support__copy">
+              <div class="eyebrow">Session en cours</div>
+              <h2>Une composition pensee comme une vraie app mobile.</h2>
+              <p>Le haut reste libre pour accueillir plus tard mini-player, alertes ou statuts contextuels, sans les afficher en permanence aujourd hui.</p>
+            </div>
+            <div class="home-support__meta">
+              <span>Globe interactif</span>
+              <span>Navigation basse premium</span>
+              <span>Approche mobile-first</span>
+            </div>
           </div>
         </section>
 
-        <section class="globe-panel">
-          <div class="globe-shell">
-            <div id="globe-3d"></div>
-            <canvas id="globe-canvas" aria-label="Planète KVMECORP"></canvas>
-            <div id="artist-markers"></div>
-            <div class="orbit orbit-1"></div>
-            <div class="orbit orbit-2"></div>
-            <div class="orbit orbit-3"></div>
-            <button class="artist-dot" style="--artist:#e2583e;top:34%;left:38%" data-artist="goten"><span>G</span></button>
-            <button class="artist-dot" style="--artist:#8d73ff;top:28%;left:62%" data-artist="mvk"><span>M</span></button>
-            <button class="artist-dot" style="--artist:#caa537;top:60%;left:70%" data-artist="saiyan"><span>S</span></button>
-            <button class="artist-dot" style="--artist:#5a88d8;top:66%;left:35%" data-artist="lat"><span>L</span></button>
-            <button class="artist-dot" style="--artist:#7f8794;top:46%;left:54%" data-artist="enden"><span>E</span></button>
-          </div>
-          <div class="globe-caption">
-            <div class="eyebrow">Carte vivante</div>
-            <p>Cette planète adopte maintenant une matière sombre, presque joaillière, puis les artistes injectent leur couleur au clic.</p>
-          </div>
-        </section>
-
-        <section class="section-block">
+        <section class="section-block home-news">
           <div class="section-head">
-            <div class="eyebrow">Actualité</div>
-            <h3>Blocs prêts à brancher</h3>
+            <div class="eyebrow">Actualite</div>
+            <h3>Acces rapides</h3>
           </div>
           <div class="news-list" id="news-list"></div>
         </section>
@@ -84,7 +80,7 @@
 
     <section class="screen" id="artists">
       <div class="screen-head">
-        <div class="eyebrow">Réseau</div>
+        <div class="eyebrow">Reseau</div>
         <h2>Artistes</h2>
       </div>
       <div class="screen-scroll">
@@ -104,7 +100,7 @@
             </div>
             <div class="profile-hero__media media-slot media-slot--avatar" id="profile-avatar-slot">
               <div class="media-slot__label">AVATAR / VISUEL</div>
-              <div class="media-slot__hint">PNG, photo, rendu 3D, loop vidéo</div>
+              <div class="media-slot__hint">PNG, photo, rendu 3D, loop video</div>
             </div>
           </div>
         </div>
@@ -113,18 +109,18 @@
           <div class="card media-card">
             <div class="section-head compact">
               <div class="eyebrow">Hero media</div>
-              <h3>Zone vidéo artiste</h3>
+              <h3>Zone video artiste</h3>
             </div>
             <div class="media-slot media-slot--wide">
-              <div class="media-slot__label">EMPLACEMENT VIDÉO PROFIL</div>
-              <div class="media-slot__hint">Parfait pour clip teaser, intro capsule, avatar animé ou loop ambiante</div>
+              <div class="media-slot__label">EMPLACEMENT VIDEO PROFIL</div>
+              <div class="media-slot__hint">Parfait pour clip teaser, intro capsule, avatar anime ou loop ambiante</div>
             </div>
           </div>
 
           <div class="card media-card">
             <div class="section-head compact">
               <div class="eyebrow">Capsules</div>
-              <h3>Collection de l’artiste</h3>
+              <h3>Collection de l artiste</h3>
             </div>
             <div id="profile-capsules" class="capsule-list"></div>
           </div>
@@ -134,7 +130,7 @@
 
     <section class="screen" id="capsules">
       <div class="screen-head">
-        <div class="eyebrow">Bibliothèque</div>
+        <div class="eyebrow">Bibliotheque</div>
         <h2>Capsules</h2>
       </div>
       <div class="screen-scroll">
@@ -151,7 +147,7 @@
             <p id="radio-artist">GOTEN</p>
             <div class="radio-visual" id="radio-visual"></div>
             <div class="radio-controls">
-              <button class="ghost-btn" id="prev-track">Préc.</button>
+              <button class="ghost-btn" id="prev-track">Prec.</button>
               <button class="primary-btn" id="toggle-play">Play</button>
               <button class="ghost-btn" id="next-track">Suiv.</button>
             </div>
@@ -159,12 +155,12 @@
           <div class="card media-card">
             <div class="section-head compact">
               <div class="eyebrow">Audio / motion</div>
-              <h3>Où brancher tes médias</h3>
+              <h3>Ou brancher tes medias</h3>
             </div>
             <div class="placeholder-list">
               <div><strong>Audio</strong><span>remplace le track virtuel par un vrai fichier mp3</span></div>
-              <div><strong>Lottie / GSAP</strong><span>ajoute des animations légères</span></div>
-              <div><strong>Vidéo</strong><span>mets un loop en fond de la radio</span></div>
+              <div><strong>Lottie / GSAP</strong><span>ajoute des animations legeres</span></div>
+              <div><strong>Video</strong><span>mets un loop en fond de la radio</span></div>
             </div>
           </div>
         </div>
@@ -178,9 +174,9 @@
       </div>
       <div class="screen-scroll">
         <div class="lore-stack">
-          <article class="card lore-card"><div class="eyebrow">Origine</div><p>KVMECORP n’est pas présenté comme un simple label, mais comme un réseau artistique, collectionnable et narratif. Cette logique est déjà visible dans ton prototype initial. fileciteturn0file0</p></article>
-          <article class="card lore-card"><div class="eyebrow">Direction claire</div><p>Ici, l’interface passe en noir dense, contours satinés et reflets dorés pour un rendu plus luxe, plus galerie, plus application premium.</p></article>
-          <article class="card lore-card"><div class="eyebrow">Objectif</div><p>Te laisser brancher progressivement covers, vidéos, avatars 3D, clips, loops et sons sans casser la structure.</p></article>
+          <article class="card lore-card"><div class="eyebrow">Origine</div><p>KVMECORP n est pas presente comme un simple label, mais comme un reseau artistique, collectionnable et narratif.</p></article>
+          <article class="card lore-card"><div class="eyebrow">Direction</div><p>Ici, l interface reste noire, dense et elegante pour donner plus d impact au globe, aux artistes et aux capsules.</p></article>
+          <article class="card lore-card"><div class="eyebrow">Objectif</div><p>Te laisser brancher progressivement covers, videos, avatars 3D, clips, loops et sons sans casser la structure.</p></article>
         </div>
       </div>
     </section>
@@ -195,25 +191,49 @@
           <div class="profile-card__avatar media-slot media-slot--avatar small">USER</div>
           <div>
             <div class="eyebrow">Explorateur</div>
-            <h3>Compte démo</h3>
-            <p>Cette zone peut accueillir plus tard la collection, les capsules rares, l’historique d’écoute ou un wallet.</p>
+            <h3>Compte demo</h3>
+            <p>Cette zone peut accueillir plus tard la collection, les capsules rares, l historique d ecoute ou un wallet.</p>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <nav class="bottom-nav">
-    <button class="nav-btn" data-screen="artists">Artistes</button>
-    <button class="nav-btn" data-screen="capsules">Capsules</button>
-    <button class="nav-btn nav-btn--center" data-screen="radio">Radio</button>
-    <button class="nav-btn" data-screen="univers">Univers</button>
-    <button class="nav-btn" data-screen="profil">Profil</button>
+  <div class="utility-reserve" aria-hidden="true">
+    <div id="mini-title"></div>
+    <div id="mini-artist"></div>
+    <div id="mini-cover"></div>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navigation principale">
+    <button class="nav-btn active" data-screen="home" aria-label="Accueil">
+      <span class="nav-btn__icon">O</span>
+      <span class="nav-btn__label">Accueil</span>
+    </button>
+    <button class="nav-btn" data-screen="artists" aria-label="Artistes">
+      <span class="nav-btn__icon">A</span>
+      <span class="nav-btn__label">Artistes</span>
+    </button>
+    <button class="nav-btn" data-screen="capsules" aria-label="Capsules">
+      <span class="nav-btn__icon">C</span>
+      <span class="nav-btn__label">Capsules</span>
+    </button>
+    <button class="nav-btn" data-screen="radio" aria-label="Radio">
+      <span class="nav-btn__icon">R</span>
+      <span class="nav-btn__label">Radio</span>
+    </button>
+    <button class="nav-btn" data-screen="univers" aria-label="Univers">
+      <span class="nav-btn__icon">U</span>
+      <span class="nav-btn__label">Univers</span>
+    </button>
+    <button class="nav-btn" data-screen="profil" aria-label="Profil">
+      <span class="nav-btn__icon">P</span>
+      <span class="nav-btn__label">Profil</span>
+    </button>
   </nav>
-  
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script src="data/artists.js"></script>
-<script src="script.js"></script>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="data/artists.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
-

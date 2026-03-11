@@ -320,130 +320,156 @@ function initGlobe3D() {
   container.innerHTML = "";
 
   const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x020202, 0.055);
 
   const width = container.clientWidth;
   const height = container.clientHeight;
 
-  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-  camera.position.z = 4.8;
+  const defaultFov = 38;
+  let currentFov = defaultFov;
+  const minFov = 32;
+  const maxFov = 50;
+
+  const camera = new THREE.PerspectiveCamera(currentFov, width / height, 0.1, 1000);
+  camera.position.set(0, -0.28, 4.15);
+  camera.lookAt(0, 0.12, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  if ("outputColorSpace" in renderer && THREE.SRGBColorSpace) {
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+  }
+  if ("toneMapping" in renderer) {
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+  }
   container.appendChild(renderer.domElement);
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.72);
   scene.add(ambient);
 
-  const light = new THREE.DirectionalLight(0xffffff, 1.2);
-  light.position.set(3, 2, 5);
-  scene.add(light);
+  const hemi = new THREE.HemisphereLight(0xefe3c2, 0x060606, 0.72);
+  scene.add(hemi);
 
-  const geometry = new THREE.SphereGeometry(1.25, 64, 64);
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x121214,
-    roughness: 0.42,
-    metalness: 0.34
-  });
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.45);
+  keyLight.position.set(2.8, 1.6, 4.8);
+  scene.add(keyLight);
 
-  const globe = new THREE.Mesh(geometry, material);
-  scene.add(globe);
-  const haloGeo = new THREE.SphereGeometry(1.35, 64, 64);
-const haloMat = new THREE.MeshBasicMaterial({
-  color: 0xd6b76b,
-  transparent: true,
-  opacity: 0.08
-});
+  const rimLight = new THREE.DirectionalLight(0xd6b76b, 0.8);
+  rimLight.position.set(-3.8, -1.4, 2.8);
+  scene.add(rimLight);
 
-const halo = new THREE.Mesh(haloGeo, haloMat);
-scene.add(halo);
-
-  const wireGeometry = new THREE.WireframeGeometry(
-    new THREE.SphereGeometry(1.17, 16, 16)
+  const globeRadius = 1.52;
+  const globe = new THREE.Mesh(
+    new THREE.SphereGeometry(globeRadius, 64, 64),
+    new THREE.MeshStandardMaterial({
+      color: 0x16171a,
+      roughness: 0.58,
+      metalness: 0.18
+    })
   );
-  const wireMaterial = new THREE.LineBasicMaterial({
-    color: 0xd6b76b,
-    transparent: true,
-    opacity: 0.16
-  });
-  const wireframe = new THREE.LineSegments(wireGeometry, wireMaterial);
+  scene.add(globe);
+
+  const atmosphere = new THREE.Mesh(
+    new THREE.SphereGeometry(globeRadius * 1.035, 48, 48),
+    new THREE.MeshPhongMaterial({
+      color: 0xf0d894,
+      transparent: true,
+      opacity: 0.08,
+      side: THREE.BackSide
+    })
+  );
+  scene.add(atmosphere);
+
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(globeRadius * 1.1, 48, 48),
+    new THREE.MeshBasicMaterial({
+      color: 0xd6b76b,
+      transparent: true,
+      opacity: 0.055
+    })
+  );
+  scene.add(halo);
+
+  const wireframe = new THREE.LineSegments(
+    new THREE.WireframeGeometry(new THREE.SphereGeometry(globeRadius * 0.94, 16, 16)),
+    new THREE.LineBasicMaterial({
+      color: 0xd6b76b,
+      transparent: true,
+      opacity: 0.12
+    })
+  );
   scene.add(wireframe);
 
   const artistPoints = [
-
-  {
-    id: "goten",
-    name: "GOTEN",
-    city: "Fleurimont",
-    region: "Saint-Paul",
-    country: "La Réunion",
-    lat: -21.0167,
-    lon: 55.2667,
-    color: "#e2583e"
-  },
-
-  {
-    id: "mvk",
-    name: "MVK",
-    city: "Plateau Caillou",
-    region: "Saint-Paul",
-    country: "La Réunion",
-    lat: -21.0330,
-    lon: 55.2420,
-    color: "#8d73ff"
-  },
-
-  {
-    id: "saiyan",
-    name: "SAIYAN",
-    city: "Plateau Caillou",
-    region: "Saint-Paul",
-    country: "La Réunion",
-    lat: -21.0330,
-    lon: 55.2420,
-    color: "#caa537"
-  },
-
-  {
-    id: "enden",
-    name: "ENDEN",
-    city: "Rouen",
-    region: "Normandie",
-    country: "France",
-    origin: "Martinique",
-    lat: 49.4431,
-    lon: 1.0993,
-    color: "#7f8794"
-  },
-
-  {
-    id: "latr2iix",
-    name: "LATR2IIX",
-    city: "Rouen",
-    region: "Normandie",
-    country: "France",
-    lat: 49.4431,
-    lon: 1.0993,
-    color: "#5a88d8"
-  },
-
-  {
-    id: "lamoula16",
-    name: "LAMOULA.16",
-    city: "Saint-Leu",
-    region: "La Réunion",
-    country: "France",
-    lat: -21.1700,
-    lon: 55.2880,
-    color: "#9906e2"
-  }
-
-];
+    {
+      id: "goten",
+      name: "GOTEN",
+      city: "Fleurimont",
+      region: "Saint-Paul",
+      country: "La Réunion",
+      lat: -21.0167,
+      lon: 55.2667,
+      color: "#e2583e"
+    },
+    {
+      id: "mvk",
+      name: "MVK",
+      city: "Plateau Caillou",
+      region: "Saint-Paul",
+      country: "La Réunion",
+      lat: -21.0330,
+      lon: 55.2420,
+      color: "#8d73ff"
+    },
+    {
+      id: "saiyan",
+      name: "SAIYAN",
+      city: "Plateau Caillou",
+      region: "Saint-Paul",
+      country: "La Réunion",
+      lat: -21.0330,
+      lon: 55.2420,
+      color: "#caa537"
+    },
+    {
+      id: "enden",
+      name: "ENDEN",
+      city: "Rouen",
+      region: "Normandie",
+      country: "France",
+      origin: "Martinique",
+      lat: 49.4431,
+      lon: 1.0993,
+      color: "#7f8794"
+    },
+    {
+      id: "latr2iix",
+      name: "LATR2IIX",
+      city: "Rouen",
+      region: "Normandie",
+      country: "France",
+      lat: 49.4431,
+      lon: 1.0993,
+      color: "#5a88d8"
+    },
+    {
+      id: "lamoula16",
+      name: "LAMOULA.16",
+      city: "Saint-Leu",
+      region: "La Réunion",
+      country: "France",
+      lat: -21.1700,
+      lon: 55.2880,
+      color: "#9906e2"
+    }
+  ];
 
   const markerGroup = new THREE.Group();
   const markers = [];
 
-  function latLonToVector3(lat, lon, radius = 1.22) {
+  function latLonToVector3(lat, lon, radius = globeRadius * 0.985) {
     const phi = (90 - lat) * (Math.PI / 180);
     const theta = (lon + 180) * (Math.PI / 180);
 
@@ -454,44 +480,47 @@ scene.add(halo);
     return new THREE.Vector3(x, y, z);
   }
 
- artistPoints.forEach((point) => {
-  const markerGeo = new THREE.SphereGeometry(0.065, 20, 20);
-  const markerMat = new THREE.MeshStandardMaterial({
-  color: point.color,
-  emissive: point.color,
-  emissiveIntensity: 1.4
-});
-  const marker = new THREE.Mesh(markerGeo, markerMat);
+  artistPoints.forEach((point) => {
+    const marker = new THREE.Mesh(
+      new THREE.SphereGeometry(0.072, 18, 18),
+      new THREE.MeshStandardMaterial({
+        color: point.color,
+        emissive: point.color,
+        emissiveIntensity: 1.25,
+        metalness: 0.18,
+        roughness: 0.42
+      })
+    );
 
-  const glowGeo = new THREE.SphereGeometry(0.1, 16, 16);
-  const glowMat = new THREE.MeshBasicMaterial({
-    color: point.color,
-    transparent: true,
-    opacity: 0.18
+    const glow = new THREE.Mesh(
+      new THREE.SphereGeometry(0.115, 14, 14),
+      new THREE.MeshBasicMaterial({
+        color: point.color,
+        transparent: true,
+        opacity: 0.16
+      })
+    );
+    marker.add(glow);
+
+    marker.position.copy(latLonToVector3(point.lat, point.lon));
+    marker.userData.artistId = point.id;
+
+    markerGroup.add(marker);
+    markers.push(marker);
   });
-  const glow = new THREE.Mesh(glowGeo, glowMat);
-  marker.add(glow);
-
-  marker.position.copy(latLonToVector3(point.lat, point.lon));
-  marker.userData.artistId = point.id;
-
-  markerGroup.add(marker);
-  markers.push(marker);
-});
 
   scene.add(markerGroup);
 
   const orbitMaterial = new THREE.LineBasicMaterial({
     color: 0xd6b76b,
     transparent: true,
-    opacity: 0.16
+    opacity: 0.12
   });
 
   function createOrbit(radiusX, radiusY, rotX, rotY) {
     const curve = new THREE.EllipseCurve(0, 0, radiusX, radiusY, 0, Math.PI * 2, false, 0);
     const points2D = curve.getPoints(100);
-    const points3D = points2D.map(p => new THREE.Vector3(p.x, p.y, 0));
-
+    const points3D = points2D.map((p) => new THREE.Vector3(p.x, p.y, 0));
     const geometry = new THREE.BufferGeometry().setFromPoints(points3D);
     const line = new THREE.LineLoop(geometry, orbitMaterial);
 
@@ -501,9 +530,34 @@ scene.add(halo);
     return line;
   }
 
-  const orbit1 = createOrbit(1.6, 0.55, Math.PI / 2.8, 0.2);
-  const orbit2 = createOrbit(1.75, 0.62, Math.PI / 2.5, -0.35);
+  const orbit1 = createOrbit(1.95, 0.66, Math.PI / 2.95, 0.18);
+  const orbit2 = createOrbit(2.12, 0.76, Math.PI / 2.6, -0.3);
   scene.add(orbit1, orbit2);
+
+  const rotatables = [globe, atmosphere, halo, wireframe, markerGroup];
+  let rotationX = -0.22;
+  let rotationY = -0.36;
+
+  function applySceneRotation() {
+    rotatables.forEach((mesh) => {
+      mesh.rotation.x = rotationX;
+      mesh.rotation.y = rotationY;
+    });
+    orbit1.rotation.y = rotationY + 0.18;
+    orbit2.rotation.y = rotationY - 0.14;
+  }
+
+  function clampRotation() {
+    rotationX = Math.max(-0.65, Math.min(0.3, rotationX));
+  }
+
+  function setCameraFov(nextFov) {
+    currentFov = Math.max(minFov, Math.min(maxFov, nextFov));
+    camera.fov = currentFov;
+    camera.updateProjectionMatrix();
+  }
+
+  applySceneRotation();
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
@@ -511,38 +565,80 @@ scene.add(halo);
   let isDragging = false;
   let lastX = 0;
   let lastY = 0;
+  let pinchDistance = null;
 
-  container.addEventListener("mousedown", (e) => {
+  function beginDrag(x, y) {
     isDragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-  });
+    lastX = x;
+    lastY = y;
+  }
 
-  window.addEventListener("mouseup", () => {
-    isDragging = false;
-  });
-
-  window.addEventListener("mousemove", (e) => {
+  function dragTo(x, y) {
     if (!isDragging) return;
 
-    const deltaX = e.clientX - lastX;
-    const deltaY = e.clientY - lastY;
+    const deltaX = x - lastX;
+    const deltaY = y - lastY;
 
-    globe.rotation.y += deltaX * 0.0025;
-    globe.rotation.x += deltaY * 0.003;
+    rotationY += deltaX * 0.0044;
+    rotationX += deltaY * 0.0031;
+    clampRotation();
+    applySceneRotation();
 
-    wireframe.rotation.y += deltaX * 0.005;
-    wireframe.rotation.x += deltaY * 0.003;
+    lastX = x;
+    lastY = y;
+  }
 
-    markerGroup.rotation.y += deltaX * 0.005;
-    markerGroup.rotation.x += deltaY * 0.003;
+  function endDrag() {
+    isDragging = false;
+  }
 
-    orbit1.rotation.y += deltaX * 0.005;
-    orbit2.rotation.y += deltaX * 0.005;
+  function getTouchDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.hypot(dx, dy);
+  }
 
-    lastX = e.clientX;
-    lastY = e.clientY;
+  container.addEventListener("mousedown", (e) => {
+    beginDrag(e.clientX, e.clientY);
   });
+
+  window.addEventListener("mouseup", endDrag);
+  window.addEventListener("mousemove", (e) => {
+    dragTo(e.clientX, e.clientY);
+  });
+
+  container.addEventListener("touchstart", (e) => {
+    if (e.touches.length === 1) {
+      beginDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }
+    if (e.touches.length === 2) {
+      pinchDistance = getTouchDistance(e.touches);
+    }
+  }, { passive: true });
+
+  container.addEventListener("touchmove", (e) => {
+    if (e.touches.length === 1) {
+      dragTo(e.touches[0].clientX, e.touches[0].clientY);
+    }
+
+    if (e.touches.length === 2) {
+      const nextDistance = getTouchDistance(e.touches);
+      if (pinchDistance) {
+        setCameraFov(currentFov - (nextDistance - pinchDistance) * 0.03);
+      }
+      pinchDistance = nextDistance;
+    }
+  }, { passive: true });
+
+  container.addEventListener("touchend", () => {
+    pinchDistance = null;
+    endDrag();
+  });
+
+  container.addEventListener("wheel", (event) => {
+    event.preventDefault();
+    setCameraFov(currentFov + event.deltaY * 0.015);
+  }, { passive: false });
 
   container.addEventListener("click", (event) => {
     const rect = container.getBoundingClientRect();
@@ -562,11 +658,11 @@ scene.add(halo);
     requestAnimationFrame(animate);
 
     if (!isDragging) {
-      globe.rotation.y += 0.004;
-      wireframe.rotation.y += 0.004;
-      markerGroup.rotation.y += 0.004;
-      orbit1.rotation.z += 0.0015;
-      orbit2.rotation.z -= 0.001;
+      rotationY += 0.0033;
+      rotationX += (-0.22 - rotationX) * 0.02;
+      applySceneRotation();
+      orbit1.rotation.z += 0.0012;
+      orbit2.rotation.z -= 0.00085;
     }
 
     renderer.render(scene, camera);
@@ -589,7 +685,3 @@ updateRadio();
 drawGlobe();
 initGlobe3D();
 initEvents();
-
-
-
-
