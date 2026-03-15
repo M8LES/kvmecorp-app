@@ -1,3 +1,5 @@
+﻿let globe;
+
 const artists = {
   goten: {
     name: 'GOTEN',
@@ -173,6 +175,7 @@ function buildCapsules() {
 }
 function openArtist(id) {
   const artist = artists[id];
+  if (!artist) return;
   previousScreen = currentScreen;
   document.getElementById('profile-name').textContent = artist.name;
   document.getElementById('profile-tag').textContent = artist.tag;
@@ -243,21 +246,7 @@ function drawGlobe() {
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
   ctx.clip();
-  ctx.strokeStyle = 'rgba(214,183,107,0.12)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i < 9; i++) {
-    const y = size * (0.2 + i * 0.08);
-    ctx.beginPath();
-    ctx.ellipse(size / 2, y, size * 0.34, size * 0.08, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  for (let i = 0; i < 9; i++) {
-    const x = size * (0.16 + i * 0.085);
-    ctx.beginPath();
-    ctx.ellipse(x, size / 2, size * 0.08, size * 0.34, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  ctx.fillStyle = 'rgba(214,183,107,0.08)';
+  ctx.fillStyle = 'rgba(102,162,255,0.08)';
   [[.34,.33,.14,.07],[.62,.37,.17,.09],[.58,.62,.2,.1],[.36,.58,.18,.08]].forEach(([x, y, rx, ry]) => {
     ctx.beginPath();
     ctx.ellipse(size * x, size * y, size * rx, size * ry, 0, 0, Math.PI * 2);
@@ -273,7 +262,6 @@ function initEvents() {
     btn.addEventListener('click', () => navigate(btn.dataset.screen));
   });
   document.getElementById('back-from-profile').addEventListener('click', () => navigate(previousScreen || 'artists'));
-  document.querySelectorAll('.artist-dot').forEach(dot => dot.addEventListener('click', () => openArtist(dot.dataset.artist)));
   document.getElementById('prev-track').addEventListener('click', () => {
     currentTrack = (currentTrack - 1 + radioTracks.length) % radioTracks.length;
     updateRadio();
@@ -320,7 +308,7 @@ function initGlobe3D() {
   container.innerHTML = "";
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x020202, 0.055);
+  scene.fog = new THREE.FogExp2(0x020202, 0.012);
 
   const width = container.clientWidth;
   const height = container.clientHeight;
@@ -337,137 +325,268 @@ function initGlobe3D() {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
   if ("outputColorSpace" in renderer && THREE.SRGBColorSpace) {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
   }
   if ("toneMapping" in renderer) {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.02;
   }
+
   container.appendChild(renderer.domElement);
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.72);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.88);
   scene.add(ambient);
 
-  const hemi = new THREE.HemisphereLight(0xefe3c2, 0x060606, 0.72);
+  const hemi = new THREE.HemisphereLight(0xc6d5f0, 0x122033, 0.92);
   scene.add(hemi);
 
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.45);
-  keyLight.position.set(2.8, 1.6, 4.8);
+  const keyLight = new THREE.DirectionalLight(0xfff5e8, 1.88);
+  keyLight.position.set(3.2, 1.8, 5.2);
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(0xd6b76b, 0.8);
-  rimLight.position.set(-3.8, -1.4, 2.8);
+  const rimLight = new THREE.DirectionalLight(0x86b4ff, 1.02);
+  rimLight.position.set(-4.4, 0.8, 3.4);
   scene.add(rimLight);
 
-  const globeRadius = 1.52;
-  const globe = new THREE.Mesh(
-    new THREE.SphereGeometry(globeRadius, 64, 64),
-    new THREE.MeshStandardMaterial({
-      color: 0x16171a,
-      roughness: 0.58,
-      metalness: 0.18
-    })
-  );
-  scene.add(globe);
+  const warmRim = new THREE.DirectionalLight(0xe6b16d, 0.48);
+  warmRim.position.set(-2.8, -1.8, 2.4);
+  scene.add(warmRim);
+const globeRadius = 1.52;
+  const textureLoader = new THREE.TextureLoader();
+  const maxAnisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
 
-  const atmosphere = new THREE.Mesh(
-    new THREE.SphereGeometry(globeRadius * 1.035, 48, 48),
-    new THREE.MeshPhongMaterial({
-      color: 0xf0d894,
-      transparent: true,
-      opacity: 0.08,
-      side: THREE.BackSide
-    })
-  );
-  scene.add(atmosphere);
+// =========================
+// KVMECORP EARTH
+// =========================
 
-  const halo = new THREE.Mesh(
-    new THREE.SphereGeometry(globeRadius * 1.1, 48, 48),
-    new THREE.MeshBasicMaterial({
-      color: 0xd6b76b,
-      transparent: true,
-      opacity: 0.055
-    })
-  );
-  scene.add(halo);
+const surfaceMap = textureLoader.load(
+"assets/textures/earth-day.jpg"
+);
 
-  const wireframe = new THREE.LineSegments(
-    new THREE.WireframeGeometry(new THREE.SphereGeometry(globeRadius * 0.94, 16, 16)),
-    new THREE.LineBasicMaterial({
-      color: 0xd6b76b,
-      transparent: true,
-      opacity: 0.12
-    })
-  );
-  scene.add(wireframe);
+const normalMap = textureLoader.load(
+  "assets/textures/earth-normal.jpg"
+);
 
-  const artistPoints = [
-    {
-      id: "goten",
-      name: "GOTEN",
-      city: "Fleurimont",
-      region: "Saint-Paul",
-      country: "La Réunion",
-      lat: -21.0167,
-      lon: 55.2667,
-      color: "#e2583e"
-    },
-    {
-      id: "mvk",
-      name: "MVK",
-      city: "Plateau Caillou",
-      region: "Saint-Paul",
-      country: "La Réunion",
-      lat: -21.0330,
-      lon: 55.2420,
-      color: "#8d73ff"
-    },
-    {
-      id: "saiyan",
-      name: "SAIYAN",
-      city: "Plateau Caillou",
-      region: "Saint-Paul",
-      country: "La Réunion",
-      lat: -21.0330,
-      lon: 55.2420,
-      color: "#caa537"
-    },
-    {
-      id: "enden",
-      name: "ENDEN",
-      city: "Rouen",
-      region: "Normandie",
-      country: "France",
-      origin: "Martinique",
-      lat: 49.4431,
-      lon: 1.0993,
-      color: "#7f8794"
-    },
-    {
-      id: "latr2iix",
-      name: "LATR2IIX",
-      city: "Rouen",
-      region: "Normandie",
-      country: "France",
-      lat: 49.4431,
-      lon: 1.0993,
-      color: "#5a88d8"
-    },
-    {
-      id: "lamoula16",
-      name: "LAMOULA.16",
-      city: "Saint-Leu",
-      region: "La Réunion",
-      country: "France",
-      lat: -21.1700,
-      lon: 55.2880,
-      color: "#9906e2"
-    }
+const roughnessMap = textureLoader.load(
+  "assets/textures/earth-roughness.jpg"
+);
+
+const nightMap = textureLoader.load(
+  "assets/textures/earth-night.jpg"
+);
+
+
+// --- COLOR SPACE (IMPORTANT)
+
+if (THREE.SRGBColorSpace) {
+  surfaceMap.colorSpace = THREE.SRGBColorSpace;
+  nightMap.colorSpace = THREE.SRGBColorSpace;
+}
+
+
+// --- ANISOTROPY (sharp textures)
+
+surfaceMap.anisotropy = maxAnisotropy;
+normalMap.anisotropy = maxAnisotropy;
+roughnessMap.anisotropy = maxAnisotropy;
+nightMap.anisotropy = maxAnisotropy;
+
+const globeMaterial = new THREE.MeshStandardMaterial({
+
+map: surfaceMap,
+color: new THREE.Color(0x5e6c83),
+
+normalMap: normalMap,
+normalScale: new THREE.Vector2(0.1, 0.1),
+
+roughnessMap: roughnessMap,
+roughness: 0.95,
+
+metalness: 0.08,
+
+emissiveMap: nightMap,
+emissive: new THREE.Color(0x081320),
+emissiveIntensity: 0.08
+
+});
+
+  const globeShaderState = {
+    shader: null
+  };
+
+  globeMaterial.onBeforeCompile = (shader) => {
+    shader.uniforms.uHoloCyan = { value: new THREE.Color(0x4cd8ff) };
+    shader.uniforms.uHoloStrength = { value: 0.07 };
+
+    shader.vertexShader = `
+      varying vec3 vHoloNormal;
+      varying vec2 vHoloUv;
+    ` + shader.vertexShader;
+
+    shader.vertexShader = shader.vertexShader.replace(
+      "#include <defaultnormal_vertex>",
+      `#include <defaultnormal_vertex>
+      vHoloNormal = normalize(transformedNormal);
+      vHoloUv = uv;`
+    );
+
+    shader.fragmentShader = `
+      uniform vec3 uHoloCyan;
+      uniform float uHoloStrength;
+      varying vec3 vHoloNormal;
+      varying vec2 vHoloUv;
+    ` + shader.fragmentShader;
+
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <dithering_fragment>",
+      `
+      float holoRim = pow(1.0 - clamp(dot(normalize(vHoloNormal), vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 3.6);
+      float holoBands = 0.5 + 0.5 * sin(vHoloUv.y * 120.0);
+      gl_FragColor.rgb += uHoloCyan * holoRim * (0.75 + holoBands * 0.25) * uHoloStrength;
+      #include <dithering_fragment>
+      `
+    );
+
+    globeShaderState.shader = shader;
+  };
+
+  globeMaterial.customProgramCacheKey = () => "kvmecorp-holo-globe-v1";
+
+globe = new THREE.Mesh(
+  new THREE.SphereGeometry(globeRadius, 96, 96),
+  globeMaterial
+);
+scene.add(globe);
+
+const atmosphere = new THREE.Mesh(
+  new THREE.SphereGeometry(globeRadius * 1.01, 64, 64),
+  new THREE.MeshBasicMaterial({
+    color: 0x56e0ff,
+    transparent: true,
+    opacity: 0.04,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  })
+);
+globe.add(atmosphere);
+
+
+  // LOCATIONS (points géographiques uniques)
+const locations = {
+  plateauCaillou: {
+    country: "France",
+    region: "La Réunion",
+    city: "Saint-Paul",
+    neighborhood: "Plateau Caillou",
+    lat: -21.0330,
+    lon: 55.2420
+  },
+
+  fleurimont: {
+    country: "France",
+    region: "La Réunion",
+    city: "Saint-Paul",
+    neighborhood: "Fleurimont",
+    lat: -21.0167,
+    lon: 55.2667
+  },
+
+  saintLeu: {
+    country: "France",
+    region: "La Réunion",
+    city: "Saint-Leu",
+    neighborhood: null,
+    lat: -21.1700,
+    lon: 55.2880
+  },
+
+  rouen: {
+    country: "France",
+    region: "Normandie",
+    city: "Rouen",
+    neighborhood: null,
+    lat: 49.4431,
+    lon: 1.0993
+  }
+};
+
+
+const energyColors = {
+  red: "#e2583e",
+  purple: "#8d73ff",
+  blue: "#5a88d8",
+  green: "#4cc38a",
+  gold: "#caa537",
+  white: "#ffffff"
+};
+
+const profileAliases = {
+  latr2iix: "lat"
+};
+
+function normalizeLocationKey(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]+/g, "")
+    .toLowerCase();
+}
+
+const locationKeyAliases = {
+  plateaucaillou: "plateauCaillou",
+  fleurimont: "fleurimont",
+  saintleu: "saintLeu",
+  rouen: "rouen"
+};
+
+function resolveLocationKey(artist, key) {
+  const candidates = [
+    artist.locationKey,
+    artist.neighborhood,
+    artist.city,
+    artist.region,
+    key
   ];
+
+  for (const candidate of candidates) {
+    const normalized = normalizeLocationKey(candidate);
+    if (normalized && locationKeyAliases[normalized]) {
+      return locationKeyAliases[normalized];
+    }
+  }
+
+  return artist.locationKey || key;
+}
+
+// Fusion artiste + coordonnées
+const artistPoints = Object.entries(window.artists || {}).map(([key, artist]) => ({
+  id: key,
+  name: artist.name,
+  color: artists[key]?.color || energyColors[artist.energy] || "#ffffff",
+  profileId: artists[key] ? key : profileAliases[key] || null,
+  locationKey: resolveLocationKey(artist, key)
+}));
+const artistPointsResolved = artistPoints
+  .map(artist => ({
+    ...artist,
+    ...locations[artist.locationKey]
+  }))
+  .filter((artist) => {
+    const hasCoordinates = Number.isFinite(artist.lat) && Number.isFinite(artist.lon);
+    if (!hasCoordinates) {
+      console.warn("Marker ignoré, coordonnées manquantes pour", artist.id);
+    }
+    return hasCoordinates;
+  });
 
   const markerGroup = new THREE.Group();
   const markers = [];
+  const markerVisuals = [];
+  const networkGroup = new THREE.Group();
+  const networkArcs = [];
 
   function latLonToVector3(lat, lon, radius = globeRadius * 0.985) {
     const phi = (90 - lat) * (Math.PI / 180);
@@ -480,61 +599,87 @@ function initGlobe3D() {
     return new THREE.Vector3(x, y, z);
   }
 
-  artistPoints.forEach((point) => {
+  artistPointsResolved.forEach((point, index) => {
+    const accentColor = new THREE.Color(point.color);
     const marker = new THREE.Mesh(
-      new THREE.SphereGeometry(0.072, 18, 18),
+      new THREE.SphereGeometry(0.0095, 10, 10),
       new THREE.MeshStandardMaterial({
         color: point.color,
         emissive: point.color,
-        emissiveIntensity: 1.25,
-        metalness: 0.18,
-        roughness: 0.42
+        emissiveIntensity: 0.55,
+        metalness: 0.12,
+        roughness: 0.52
       })
     );
 
     const glow = new THREE.Mesh(
-      new THREE.SphereGeometry(0.115, 14, 14),
+      new THREE.SphereGeometry(0.0155, 10, 10),
       new THREE.MeshBasicMaterial({
-        color: point.color,
+        color: accentColor,
         transparent: true,
-        opacity: 0.16
+        opacity: 0.12,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
       })
     );
-    marker.add(glow);
 
+    marker.add(glow);
     marker.position.copy(latLonToVector3(point.lat, point.lon));
-    marker.userData.artistId = point.id;
+    marker.userData.artistId = point.profileId;
+    marker.userData.sourceArtistId = point.id;
+    marker.userData.glow = glow;
 
     markerGroup.add(marker);
     markers.push(marker);
+    markerVisuals.push({
+      marker,
+      glow,
+      phase: index * 0.85,
+      baseScale: 1
+    });
   });
 
   scene.add(markerGroup);
 
-  const orbitMaterial = new THREE.LineBasicMaterial({
-    color: 0xd6b76b,
-    transparent: true,
-    opacity: 0.12
-  });
-
-  function createOrbit(radiusX, radiusY, rotX, rotY) {
-    const curve = new THREE.EllipseCurve(0, 0, radiusX, radiusY, 0, Math.PI * 2, false, 0);
-    const points2D = curve.getPoints(100);
-    const points3D = points2D.map((p) => new THREE.Vector3(p.x, p.y, 0));
-    const geometry = new THREE.BufferGeometry().setFromPoints(points3D);
-    const line = new THREE.LineLoop(geometry, orbitMaterial);
-
-    line.rotation.x = rotX;
-    line.rotation.y = rotY;
-
-    return line;
+  function createNetworkArc(startPoint, endPoint, colorHex, altitude = 0.32) {
+    const start = latLonToVector3(startPoint.lat, startPoint.lon, globeRadius * 1.002);
+    const end = latLonToVector3(endPoint.lat, endPoint.lon, globeRadius * 1.002);
+    const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(globeRadius + altitude);
+    const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+    const points = curve.getPoints(72);
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const material = new THREE.LineBasicMaterial({
+      color: colorHex,
+      transparent: true,
+      opacity: 0.08,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const arc = new THREE.Line(geometry, material);
+    networkGroup.add(arc);
+    networkArcs.push({
+      line: arc,
+      material,
+      phase: networkArcs.length * 0.9
+    });
   }
 
-  const orbit1 = createOrbit(1.95, 0.66, Math.PI / 2.95, 0.18);
-  const orbit2 = createOrbit(2.12, 0.76, Math.PI / 2.6, -0.3);
-  scene.add(orbit1, orbit2);
+  const pointsById = Object.fromEntries(artistPointsResolved.map((point) => [point.id, point]));
+  [
+    ["goten", "saiyan", 0x45d6ff, 0.26],
+    ["mvk", "enden", 0xff4fd8, 0.34],
+    ["lamoula16", "goten", 0x7a7dff, 0.28],
+    ["latr2iix", "enden", 0x45d6ff, 0.24]
+  ].forEach(([fromId, toId, colorHex, altitude]) => {
+    const fromPoint = pointsById[fromId];
+    const toPoint = pointsById[toId];
+    if (fromPoint && toPoint) {
+      createNetworkArc(fromPoint, toPoint, colorHex, altitude);
+    }
+  });
+  globe.add(networkGroup);
 
-  const rotatables = [globe, atmosphere, halo, wireframe, markerGroup];
+  const rotatables = [globe, markerGroup];
   let rotationX = -0.22;
   let rotationY = -0.36;
 
@@ -543,12 +688,10 @@ function initGlobe3D() {
       mesh.rotation.x = rotationX;
       mesh.rotation.y = rotationY;
     });
-    orbit1.rotation.y = rotationY + 0.18;
-    orbit2.rotation.y = rotationY - 0.14;
   }
 
   function clampRotation() {
-    rotationX = Math.max(-0.65, Math.min(0.3, rotationX));
+    rotationX = Math.max(-1.35, Math.min(1.35, rotationX));
   }
 
   function setCameraFov(nextFov) {
@@ -650,19 +793,36 @@ function initGlobe3D() {
 
     if (intersects.length > 0) {
       const artistId = intersects[0].object.userData.artistId;
-      if (artistId) openArtist(artistId);
+      if (artistId && artists[artistId]) openArtist(artistId);
     }
   });
 
   function animate() {
     requestAnimationFrame(animate);
+    const time = performance.now() * 0.001;
 
     if (!isDragging) {
       rotationY += 0.0033;
-      rotationX += (-0.22 - rotationX) * 0.02;
       applySceneRotation();
-      orbit1.rotation.z += 0.0012;
-      orbit2.rotation.z -= 0.00085;
+    }
+
+    markerVisuals.forEach(({ marker, glow, phase, baseScale }) => {
+      const pulse = 0.5 + 0.5 * Math.sin(time * 1.6 + phase);
+      const markerScale = baseScale + pulse * 0.012;
+      marker.scale.setScalar(markerScale);
+      glow.scale.setScalar(1 + pulse * 0.09);
+      glow.material.opacity = 0.07 + pulse * 0.035;
+    });
+
+    networkArcs.forEach(({ material, phase }) => {
+      const shimmer = 0.5 + 0.5 * Math.sin(time * 1.2 + phase);
+      material.opacity = 0.04 + shimmer * 0.045;
+    });
+
+    atmosphere.material.opacity = 0.032 + (0.5 + 0.5 * Math.sin(time * 0.8)) * 0.008;
+
+    if (globeShaderState.shader) {
+      globeShaderState.shader.uniforms.uHoloStrength.value = 0.026 + (0.5 + 0.5 * Math.sin(time * 0.65)) * 0.01;
     }
 
     renderer.render(scene, camera);
@@ -678,6 +838,8 @@ function initGlobe3D() {
     renderer.setSize(newWidth, newHeight);
   });
 }
+
+
 buildNews();
 buildArtists();
 buildCapsules();
@@ -685,3 +847,21 @@ updateRadio();
 drawGlobe();
 initGlobe3D();
 initEvents();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

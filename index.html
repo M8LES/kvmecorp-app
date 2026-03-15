@@ -38,15 +38,6 @@
             <div class="globe-shell">
               <div id="globe-3d"></div>
               <canvas id="globe-canvas" aria-label="Planete KVMECORP"></canvas>
-              <div id="artist-markers"></div>
-              <div class="orbit orbit-1"></div>
-              <div class="orbit orbit-2"></div>
-              <div class="orbit orbit-3"></div>
-              <button class="artist-dot" style="--artist:#e2583e;top:34%;left:38%" data-artist="goten"><span>G</span></button>
-              <button class="artist-dot" style="--artist:#8d73ff;top:28%;left:62%" data-artist="mvk"><span>M</span></button>
-              <button class="artist-dot" style="--artist:#caa537;top:60%;left:70%" data-artist="saiyan"><span>S</span></button>
-              <button class="artist-dot" style="--artist:#5a88d8;top:66%;left:35%" data-artist="lat"><span>L</span></button>
-              <button class="artist-dot" style="--artist:#7f8794;top:46%;left:54%" data-artist="enden"><span>E</span></button>
             </div>
             <div class="globe-caption home-caption">
               <div class="eyebrow">Carte vivante</div>
@@ -206,28 +197,24 @@
   </div>
 
   <nav class="bottom-nav" aria-label="Navigation principale">
-    <button class="nav-btn active" data-screen="home" aria-label="Accueil">
-      <span class="nav-btn__icon">O</span>
-      <span class="nav-btn__label">Accueil</span>
-    </button>
     <button class="nav-btn" data-screen="artists" aria-label="Artistes">
-      <span class="nav-btn__icon">A</span>
+      <span class="nav-btn__icon nav-btn__icon--artists"></span>
       <span class="nav-btn__label">Artistes</span>
     </button>
     <button class="nav-btn" data-screen="capsules" aria-label="Capsules">
-      <span class="nav-btn__icon">C</span>
+      <span class="nav-btn__icon nav-btn__icon--capsules"></span>
       <span class="nav-btn__label">Capsules</span>
     </button>
-    <button class="nav-btn" data-screen="radio" aria-label="Radio">
-      <span class="nav-btn__icon">R</span>
+    <button class="nav-btn nav-btn--center" data-screen="radio" aria-label="Radio">
+      <span class="nav-btn__icon nav-btn__icon--radio"></span>
       <span class="nav-btn__label">Radio</span>
     </button>
     <button class="nav-btn" data-screen="univers" aria-label="Univers">
-      <span class="nav-btn__icon">U</span>
+      <span class="nav-btn__icon nav-btn__icon--univers"></span>
       <span class="nav-btn__label">Univers</span>
     </button>
     <button class="nav-btn" data-screen="profil" aria-label="Profil">
-      <span class="nav-btn__icon">P</span>
+      <span class="nav-btn__icon nav-btn__icon--profil"></span>
       <span class="nav-btn__label">Profil</span>
     </button>
   </nav>

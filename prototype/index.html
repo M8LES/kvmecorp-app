@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KVMECORP V4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="onboarding">
+    <div class="ob-card">
+      <div class="ob-logo">KVMECORP</div>
+      <h1>Bienvenue dans le reseau.</h1>
+      <p>Plateforme artistique orbitale. Globe interactif, capsules, radio: tout est connecte.</p>
+      <div class="ob-tips">
+        <div class="ob-tip"><strong>Globe</strong><span>Fais glisser pour explorer les artistes</span></div>
+        <div class="ob-tip"><strong>Capsules</strong><span>Decouvre les sons et raretes</span></div>
+        <div class="ob-tip"><strong>Radio</strong><span>Le flux live du reseau KVME</span></div>
+      </div>
+      <button class="ob-cta" id="start-btn">Entrer</button>
+    </div>
+  </div>
+
+  <div class="top-bar">
+    <div class="app-wordmark">KVMECORP</div>
+    <button class="mini-player" id="mini-player" data-screen="radio">
+      <div class="mini-thumb" id="mini-thumb">G</div>
+      <div class="mini-info">
+        <div class="mini-tag">En cours</div>
+        <div class="mini-title" id="mini-title">INFERNO 001</div>
+        <div class="mini-artist" id="mini-artist">GOTEN</div>
+      </div>
+      <div class="mini-wave mini-paused" id="mini-wave">
+        <div class="mini-bar"></div>
+        <div class="mini-bar"></div>
+        <div class="mini-bar"></div>
+        <div class="mini-bar"></div>
+        <div class="mini-bar"></div>
+      </div>
+      <div class="mini-timer" id="mini-timer">EVENT: 44H</div>
+    </button>
+  </div>
+
+  <section class="screen active" id="home">
+    <div class="screen-scroll">
+      <div class="home-scroll">
+        <div class="home-intro">
+          <div class="eyebrow">KVMECORP . Orbital Access</div>
+          <h1>Le globe est le centre.</h1>
+          <p>Explore la carte vivante, zoome sur un artiste, entre dans son univers.</p>
+        </div>
+
+        <div class="globe-block">
+          <div class="hero-space-bg" aria-hidden="true">
+            <div class="space-haze"></div>
+            <div class="space-stars space-stars--far"></div>
+            <div class="space-stars space-stars--near"></div>
+            <div class="space-shooting-layer" id="space-shooting-layer"></div>
+          </div>
+          <div class="globe-wrapper">
+            <div id="globe-3d"></div>
+          </div>
+          <div id="artist-popup">
+            <div class="popup-top">
+              <div>
+                <div class="popup-name" id="popup-name">GOTEN</div>
+                <div class="popup-tag" id="popup-tag">TRAP . DRILL</div>
+              </div>
+              <button class="popup-close" id="popup-close">x</button>
+            </div>
+            <div class="popup-meta" id="popup-meta"></div>
+            <div class="popup-bio" id="popup-bio">Bio.</div>
+            <button class="popup-btn" id="popup-open-profile">Voir profil complet</button>
+            <span class="popup-accent" id="popup-accent"></span>
+          </div>
+          <div class="globe-caption">
+            <div class="eyebrow">Carte vivante</div>
+            <p>Touche un point pour entrer dans l'univers d'un artiste.</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label">
+            <h3>Actualite</h3>
+            <div class="section-label-line"></div>
+            <div class="eyebrow">Live</div>
+          </div>
+          <div class="news-block" id="news-block"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="artists">
+    <div class="screen-scroll">
+      <div class="screen-shell">
+        <div class="screen-head">
+          <div class="eyebrow">Reseau</div>
+          <h2>Artistes</h2>
+        </div>
+        <div class="artist-grid" id="artist-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="artist-profile">
+    <div class="screen-scroll">
+      <div class="screen-shell">
+        <div class="profile-hero">
+          <div class="profile-hero-bg" id="profile-hero-bg"></div>
+          <button class="profile-back" id="back-btn">Retour</button>
+          <div class="eyebrow" id="profile-eyebrow">TAG</div>
+          <div class="profile-name" id="profile-name">ARTISTE</div>
+          <div class="profile-tag-line" id="profile-tag">GENRE</div>
+          <div class="profile-bio" id="profile-bio">Bio.</div>
+        </div>
+        <div class="profile-body">
+          <div class="panel">
+            <div class="eyebrow">Collection</div>
+            <h3>Capsules</h3>
+            <div class="capsule-list" id="profile-capsules"></div>
+          </div>
+          <div class="panel">
+            <div class="eyebrow">Zone media</div>
+            <h3>Visuel artiste</h3>
+            <div class="media-placeholder">AVATAR / VISUEL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="capsules">
+    <div class="screen-scroll">
+      <div class="screen-shell">
+        <div class="screen-head">
+          <div class="eyebrow">Bibliotheque</div>
+          <h2>Capsules</h2>
+        </div>
+        <div class="capsule-grid" id="capsule-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="radio">
+    <div class="screen-scroll">
+      <div class="screen-shell">
+        <div class="screen-head">
+          <div class="eyebrow">Diffusion</div>
+          <h2>Radio</h2>
+        </div>
+        <div class="radio-now">
+          <div class="radio-bg" id="radio-bg"></div>
+          <div class="radio-tags">
+            <div class="radio-pill">KVMECORP RADIO</div>
+            <div class="radio-pill" id="radio-genre">TRAP</div>
+          </div>
+          <h2 id="radio-title">INFERNO 001</h2>
+          <div class="radio-now-artist" id="radio-now-artist">GOTEN</div>
+          <div class="radio-wave-vis radio-paused" id="radio-wave-vis"></div>
+          <div class="radio-controls">
+            <button class="radio-ctrl" id="prev-btn">PREC</button>
+            <button class="radio-play" id="play-btn">PLAY</button>
+            <button class="radio-ctrl" id="next-btn">SUIV</button>
+          </div>
+        </div>
+        <div class="radio-queue" id="radio-queue"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="univers">
+    <div class="screen-scroll">
+      <div class="screen-shell">
+        <div class="screen-head">
+          <div class="eyebrow">Lore</div>
+          <h2>Univers</h2>
+        </div>
+        <div class="panel">
+          <div class="eyebrow">Reseau</div>
+          <h3>KVMECORP</h3>
+          <p class="profile-bio">Chaque artiste est un noeud. Chaque capsule est un fragment du reseau.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="profil">
+    <div class="screen-scroll">
+      <div class="screen-shell">
+        <div class="screen-head">
+          <div class="eyebrow">Compte</div>
+          <h2>Profil</h2>
+        </div>
+        <div class="profil-card">
+          <div class="profil-avatar">U</div>
+          <div>
+            <h3>Explorateur</h3>
+            <p>Compte demo . Reunion, FR</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-screen="artists"><span class="nav-label">Artistes</span></button>
+    <button class="nav-btn" data-screen="capsules"><span class="nav-label">Capsules</span></button>
+    <button class="nav-btn nav-btn--radio" data-screen="radio"><span class="nav-label">Radio</span></button>
+    <button class="nav-btn" data-screen="univers"><span class="nav-label">Univers</span></button>
+    <button class="nav-btn" data-screen="profil"><span class="nav-label">Profil</span></button>
+  </nav>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="../data/artists.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
